@@ -9,7 +9,12 @@ app.get("/api", (req, res) => {
   res.send("Hello from backend API");
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+);
 app.use(express.json({ limit: "50mb" }));
 
 // ==========================
@@ -18,8 +23,11 @@ app.use(express.json({ limit: "50mb" }));
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -42,6 +50,7 @@ transporter.verify((error, success) => {
 app.post("/send-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
+    console.log("KYC request received");
 
     if (!email || !otp) {
       return res.status(400).json({
