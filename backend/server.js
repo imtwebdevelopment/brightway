@@ -15,21 +15,26 @@ app.use(express.json({ limit: "20mb" }));
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 587,
+  port: 2525,
   secure: false,
+
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
+
   auth: {
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
   },
-  requireTLS: true,
+
   tls: {
     rejectUnauthorized: false
   },
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
-  socketTimeout: 20000
-});
 
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000
+});
 // SMTP connection test
 transporter.verify(function (error, success) {
   if (error) {
@@ -93,13 +98,20 @@ app.post("/send-kyc", async (req, res) => {
       panBase64,
     } = req.body;
 
+    const pdfData = pdfBase64.includes("base64,")
+      ? pdfBase64.split("base64,")[1]
+      : pdfBase64;
+
+    const panData = panBase64?.includes("base64,")
+      ? panBase64.split("base64,")[1]
+      : panBase64;
+
     const mailOptions = {
       from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
       to: process.env.ADMIN_EMAIL,
       subject: `New KYC Submission - ${fullName}`,
       html: `
         <h2>New KYC Submission</h2>
-
         <p><b>Name:</b> ${fullName}</p>
         <p><b>Gender:</b> ${gender}</p>
         <p><b>DOB:</b> ${dob}</p>
@@ -107,20 +119,20 @@ app.post("/send-kyc", async (req, res) => {
         <p><b>Email:</b> ${email}</p>
         <p><b>Address:</b> ${address}</p>
       `,
-     attachments: [
-  {
-    filename: "signed_kyc.pdf",
-    content: Buffer.from(pdfBase64.split("base64,")[1], "base64"),
-  },
-  ...(panBase64
-    ? [
+      attachments: [
         {
-          filename: "pan_card.png",
-          content: Buffer.from(panBase64.split("base64,")[1], "base64"),
+          filename: "signed_kyc.pdf",
+          content: Buffer.from(pdfData, "base64"),
         },
-      ]
-    : []),
-]
+        ...(panData
+          ? [
+            {
+              filename: "pan_card.png",
+              content: Buffer.from(panData, "base64"),
+            },
+          ]
+          : []),
+      ],
     };
 
     await transporter.sendMail(mailOptions);
