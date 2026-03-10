@@ -61,7 +61,7 @@ app.post("/send-otp", async (req, res) => {
     const { email, otp } = req.body;
 
     const mailOptions = {
-      from: '"Brightways KYC" <brightways2026@gmail.com>',
+      from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
       to: email,
       subject: "Email Verification OTP",
       html: `
@@ -107,7 +107,7 @@ app.post("/send-kyc", async (req, res) => {
       : panBase64;
 
     const mailOptions = {
-      from: '"Brightways KYC" <brightways2026@gmail.com>',
+      from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
       to: process.env.ADMIN_EMAIL,
       subject: `New KYC Submission - ${fullName}`,
       html: `
