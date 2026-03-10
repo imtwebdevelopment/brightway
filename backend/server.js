@@ -15,8 +15,8 @@ app.use(express.json({ limit: "20mb" }));
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
- port: 2525,
-  secure: false, // MUST be false for port 587
+  port: 2525,
+  secure: false,
   auth: {
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
@@ -29,6 +29,7 @@ const transporter = nodemailer.createTransport({
   socketTimeout: 20000
 });
 
+// SMTP connection test
 transporter.verify(function (error, success) {
   if (error) {
     console.log("SMTP Error:", error);
@@ -57,7 +58,7 @@ app.post("/send-otp", async (req, res) => {
 
     const mailOptions = {
 
-    from: `"Brightways KYC" <${process.env.BREVO_USER}>`,
+      from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
 
       to: email,
 
@@ -106,9 +107,9 @@ app.post("/send-kyc", async (req, res) => {
 
     const mailOptions = {
 
-      from: `"Brightways KYC" <${process.env.BREVO_USER}>`,
+      from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
 
-       to: process.env.ADMIN_EMAIL,
+      to: process.env.ADMIN_EMAIL,
 
       subject: `New KYC Submission - ${fullName}`,
 
