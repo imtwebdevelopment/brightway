@@ -15,12 +15,13 @@ app.use(express.json({ limit: "20mb" }));
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 2525,
+  port: 587,
   secure: false,
   auth: {
     user: process.env.BREVO_USER,
     pass: process.env.BREVO_PASS,
   },
+  requireTLS: true,
   tls: {
     rejectUnauthorized: false
   },
@@ -51,19 +52,13 @@ app.get("/", (req, res) => {
 // ==========================
 
 app.post("/send-otp", async (req, res) => {
-
   try {
-
     const { email, otp } = req.body;
 
     const mailOptions = {
-
       from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
-
       to: email,
-
       subject: "Email Verification OTP",
-
       html: `
         <h2>Email Verification</h2>
         <p>Your OTP Code:</p>
@@ -74,16 +69,11 @@ app.post("/send-otp", async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success:true });
-
+    res.json({ success: true });
   } catch (error) {
-
     console.log("OTP Error:", error);
-
-    res.status(500).json({ success:false });
-
+    res.status(500).json({ success: false });
   }
-
 });
 
 // ==========================
@@ -91,9 +81,7 @@ app.post("/send-otp", async (req, res) => {
 // ==========================
 
 app.post("/send-kyc", async (req, res) => {
-
   try {
-
     const {
       fullName,
       gender,
@@ -102,17 +90,13 @@ app.post("/send-kyc", async (req, res) => {
       email,
       address,
       pdfBase64,
-      panBase64
+      panBase64,
     } = req.body;
 
     const mailOptions = {
-
       from: '"Brightways KYC" <imtwebdevelopment@gmail.com>',
-
       to: process.env.ADMIN_EMAIL,
-
       subject: `New KYC Submission - ${fullName}`,
-
       html: `
         <h2>New KYC Submission</h2>
 
@@ -123,41 +107,29 @@ app.post("/send-kyc", async (req, res) => {
         <p><b>Email:</b> ${email}</p>
         <p><b>Address:</b> ${address}</p>
       `,
-
-      attachments: [
-
+     attachments: [
+  {
+    filename: "signed_kyc.pdf",
+    content: Buffer.from(pdfBase64.split("base64,")[1], "base64"),
+  },
+  ...(panBase64
+    ? [
         {
-          filename: "signed_kyc.pdf",
-          content: pdfBase64.split("base64,")[1],
-          encoding: "base64"
+          filename: "pan_card.png",
+          content: Buffer.from(panBase64.split("base64,")[1], "base64"),
         },
-
-        ...(panBase64
-          ? [
-              {
-                filename: "pan_card.png",
-                content: panBase64.split("base64,")[1],
-                encoding: "base64"
-              }
-            ]
-          : [])
-
       ]
-
+    : []),
+]
     };
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success:true });
-
+    res.json({ success: true });
   } catch (error) {
-
     console.log("KYC Error:", error);
-
-    res.status(500).json({ success:false });
-
+    res.status(500).json({ success: false });
   }
-
 });
 
 // ==========================
