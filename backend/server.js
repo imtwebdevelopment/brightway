@@ -5,6 +5,9 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 
 const app = express();
+app.get("/api", (req, res) => {
+  res.send("Hello from backend API");
+});
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
