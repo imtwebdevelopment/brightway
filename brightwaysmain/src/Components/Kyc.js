@@ -106,7 +106,7 @@ function Kyc() {
 
     try {
 
-      const response = await fetch("http://localhost:5000/send-otp", {
+      const response = await fetch("https://brightway.onrender.com/send-otp", {
 
         method: "POST",
 
@@ -299,47 +299,47 @@ function Kyc() {
   // ======================
   const sendKycToServer = async (pdfBytes) => {
 
-  try {
+    try {
 
-    const uint8Array = new Uint8Array(pdfBytes);
-    let binary = "";
-    const chunkSize = 0x8000;
+      const uint8Array = new Uint8Array(pdfBytes);
+      let binary = "";
+      const chunkSize = 0x8000;
 
-    for (let i = 0; i < uint8Array.length; i += chunkSize) {
-      const chunk = uint8Array.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, chunk);
+      for (let i = 0; i < uint8Array.length; i += chunkSize) {
+        const chunk = uint8Array.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, chunk);
+      }
+
+      const pdfBase64 = btoa(binary);
+
+      const response = await fetch("https://brightway.onrender.com/send-kyc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          gender: formData.gender,
+          dob: formData.dob,
+          mobile: formData.mobile,
+          email: email,
+          address: formData.address,
+          pdfBase64: `data:application/pdf;base64,${pdfBase64}`,
+          panBase64: panBase64
+        }),
+      });
+
+      return await response.json();
+
+    } catch (error) {
+
+      console.error("KYC API error:", error);
+
+      return { success: false };
+
     }
 
-    const pdfBase64 = btoa(binary);
-
-    const response = await fetch("http://localhost:5000/send-kyc", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        fullName: formData.fullName,
-        gender: formData.gender,
-        dob: formData.dob,
-        mobile: formData.mobile,
-        email: email,
-        address: formData.address,
-        pdfBase64: `data:application/pdf;base64,${pdfBase64}`,
-        panBase64: panBase64
-      }),
-    });
-
-    return await response.json();
-
-  } catch (error) {
-
-    console.error("KYC API error:", error);
-
-    return { success: false };
-
-  }
-
-};
+  };
 
   // ======================
   // SUBMIT
@@ -590,7 +590,7 @@ function Kyc() {
 
                       setPanFile(file);
                       if (panPreview) URL.revokeObjectURL(panPreview);
-setPanPreview(URL.createObjectURL(file));
+                      setPanPreview(URL.createObjectURL(file));
                     }
                   }}
                 />
