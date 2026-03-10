@@ -2,20 +2,26 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 
 const app = express();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+app.use(cors());
+app.use(express.json({ limit: "20mb" }));
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST"],
-  })
-);
+// ==========================
+// BREVO SMTP CONFIG
+// ==========================
 
-app.use(express.json({ limit: "10mb" }));
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
+  },
+});
 
 // ==========================
 // HEALTH CHECK
@@ -25,13 +31,8 @@ app.get("/", (req, res) => {
   res.send("Backend running");
 });
 
-app.get("/api", (req, res) => {
-  res.send("Hello from backend API");
-});
-
-
 // ==========================
-// OTP SEND API
+// SEND OTP TO CLIENT
 // ==========================
 
 app.post("/send-otp", async (req, res) => {
@@ -40,53 +41,38 @@ app.post("/send-otp", async (req, res) => {
 
     const { email, otp } = req.body;
 
-    if (!email || !otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and OTP required",
-      });
-    }
+    const mailOptions = {
 
-   const result = await resend.emails.send({
+    from: `"Brightways KYC" <${process.env.BREVO_USER}>`,
 
-      from:"onboarding@resend.dev",
-      to: [email],
+      to: email,
+
       subject: "Email Verification OTP",
 
       html: `
-      <h2>Email Verification</h2>
-
-      <p>Your OTP Code:</p>
-
-      <h1 style="color:#007bff">${otp}</h1>
-
-      <p>This OTP valid for 2 minutes.</p>
+        <h2>Email Verification</h2>
+        <p>Your OTP Code:</p>
+        <h1>${otp}</h1>
+        <p>This OTP is valid for 2 minutes.</p>
       `,
+    };
 
-    });
+    await transporter.sendMail(mailOptions);
 
-    res.json({
-      success: true,
-      message: "OTP Sent Successfully",
-    });
-
-    console.log(result);
+    res.json({ success:true });
 
   } catch (error) {
 
     console.log("OTP Error:", error);
 
-    res.status(500).json({
-      success: false,
-    });
+    res.status(500).json({ success:false });
 
   }
 
 });
 
-
 // ==========================
-// KYC SUBMIT API
+// SEND KYC TO ADMIN
 // ==========================
 
 app.post("/send-kyc", async (req, res) => {
@@ -104,27 +90,23 @@ app.post("/send-kyc", async (req, res) => {
       panBase64
     } = req.body;
 
-    await resend.emails.send({
+    const mailOptions = {
 
-      from: "onboarding@resend.dev",
+      from: '"Brightways KYC" <no-reply@brightways.com>',
 
-      to: [process.env.ADMIN_EMAIL],
+      to: process.env.ADMIN_EMAIL,
 
       subject: `New KYC Submission - ${fullName}`,
 
       html: `
-      <h2>New KYC Submission</h2>
+        <h2>New KYC Submission</h2>
 
-      <table border="1" cellpadding="8">
-
-      <tr><td>Name</td><td>${fullName}</td></tr>
-      <tr><td>Gender</td><td>${gender}</td></tr>
-      <tr><td>DOB</td><td>${dob}</td></tr>
-      <tr><td>Mobile</td><td>${mobile}</td></tr>
-      <tr><td>Email</td><td>${email}</td></tr>
-      <tr><td>Address</td><td>${address}</td></tr>
-
-      </table>
+        <p><b>Name:</b> ${fullName}</p>
+        <p><b>Gender:</b> ${gender}</p>
+        <p><b>DOB:</b> ${dob}</p>
+        <p><b>Mobile:</b> ${mobile}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Address:</b> ${address}</p>
       `,
 
       attachments: [
@@ -132,6 +114,7 @@ app.post("/send-kyc", async (req, res) => {
         {
           filename: "signed_kyc.pdf",
           content: pdfBase64.split("base64,")[1],
+          encoding: "base64"
         },
 
         ...(panBase64
@@ -139,29 +122,28 @@ app.post("/send-kyc", async (req, res) => {
               {
                 filename: "pan_card.png",
                 content: panBase64.split("base64,")[1],
-              },
+                encoding: "base64"
+              }
             ]
-          : []),
-      ],
+          : [])
 
-    });
+      ]
 
-    res.json({
-      success: true,
-    });
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({ success:true });
 
   } catch (error) {
 
     console.log("KYC Error:", error);
 
-    res.status(500).json({
-      success: false,
-    });
+    res.status(500).json({ success:false });
 
   }
 
 });
-
 
 // ==========================
 // SERVER START
@@ -170,7 +152,5 @@ app.post("/send-kyc", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-
   console.log(`Server running on port ${PORT}`);
-
 });
