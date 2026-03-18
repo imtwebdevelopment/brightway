@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import qr from "../assets/payment-qr.jpeg";
 import scanImg from "../assets/scan-illustration.jpg";
 
 const PaymentPage = () => {
 
+  const [copied, setCopied] = useState(false);
+
   const copyUPI = () => {
     navigator.clipboard.writeText("bright.ra@validkpay");
-    alert("UPI ID Copied!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div
+    <main
       className="container-fluid"
       style={{
         background:
@@ -25,7 +28,7 @@ const PaymentPage = () => {
         <div className="row align-items-center">
 
           {/* LEFT IMAGE */}
-          <div className="col-lg-6 text-center mb-4">
+          <section className="col-lg-6 text-center mb-4">
 
             <div
               className="p-3"
@@ -37,17 +40,17 @@ const PaymentPage = () => {
             >
               <img
                 src={scanImg}
-                alt="Scan Illustration"
+                alt="Illustration showing how to scan QR code using mobile payment apps"
                 className="img-fluid"
                 style={{ maxHeight: "420px" }}
               />
             </div>
 
-          </div>
+          </section>
 
 
           {/* RIGHT PAYMENT CARD */}
-          <div className="col-lg-6">
+          <section className="col-lg-6">
 
             <div
               className="card border-0 p-4"
@@ -64,9 +67,9 @@ const PaymentPage = () => {
                 Secure Payment
               </span>
 
-              <h2 className="fw-bold mb-2">
+              <h1 className="fw-bold mb-2">
                 Scan & Pay
-              </h2>
+              </h1>
 
               <p className="text-muted">
                 Scan the QR code using any UPI application and
@@ -77,30 +80,56 @@ const PaymentPage = () => {
               <div className="text-center my-3">
                 <img
                   src={qr}
-                  alt="QR"
+                  alt="QR code for UPI payment to bright.ra@validkpay"
                   className="img-fluid rounded shadow"
                   style={{ maxWidth: "200px" }}
                 />
               </div>
 
-              {/* UPI */}
+              {/* ✅ LABEL ADDED */}
+              <label htmlFor="upi-id" className="form-label fw-bold">
+                UPI ID
+              </label>
+
               <div className="input-group mb-3">
+
                 <input
+                  id="upi-id"
                   className="form-control text-center fw-bold"
                   value="bright.ra@validkpay"
                   readOnly
+                  aria-describedby="upi-help"
                 />
 
                 <button
                   className="btn btn-success"
                   onClick={copyUPI}
+                  aria-label="Copy UPI ID to clipboard"
                 >
                   Copy
                 </button>
               </div>
 
+              {/* ✅ Screen reader feedback */}
+              <div id="upi-help" className="visually-hidden">
+                Use this UPI ID to complete your payment
+              </div>
+
+              {copied && (
+                <div
+                  className="alert alert-success py-2"
+                  role="status"
+                  aria-live="polite"
+                >
+                  UPI ID Copied Successfully!
+                </div>
+              )}
+
               {/* Warning */}
-              <div className="alert alert-warning py-2">
+              <div
+                className="alert alert-warning py-2"
+                role="alert"
+              >
                 ⚠ We are not responsible for payments made to other accounts
               </div>
 
@@ -112,7 +141,7 @@ const PaymentPage = () => {
                 </li>
 
                 <li className="list-group-item">
-                  ✅ Scan QR Code
+                 ✅ Scan QR Code
                 </li>
 
                 <li className="list-group-item">
@@ -127,12 +156,12 @@ const PaymentPage = () => {
 
             </div>
 
-          </div>
+          </section>
 
         </div>
 
       </div>
-    </div>
+    </main>
   );
 };
 

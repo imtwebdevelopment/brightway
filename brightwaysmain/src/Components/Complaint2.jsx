@@ -6,15 +6,23 @@ const Complaint2 = () => {
   return (
     <div className="container mt-5">
       <div className="text-center mb-4">
-        <h5>Data For the Month ending: February, 2026</h5>
+        <h1 className="text-center mb-4">
+          Data For the Month Ending: February, 2026
+        </h1>
       </div>
 
-      <Table striped bordered hover responsive="sm">
+      <Table
+        striped
+        bordered
+        hover
+        responsive="sm"
+        aria-label="Monthly complaints summary table"
+      >
         <thead className="text-center">
           <tr>
-            <th>Sr No</th>
-            <th>Received From</th>
-            <th>Pending at the end of Last Month</th>
+            <th scope="col">Sr No</th>
+            <th scope="col">Received From</th>
+            <th scope="col">Pending at the end of Last Month</th>
             <th>Received</th>
             <th>Resolved</th>
             <th>Total Pending</th>
@@ -55,7 +63,7 @@ const Complaint2 = () => {
           </tr>
           <tr>
             <td></td>
-            <td>Grand Total</td>
+            <th scope="row">Grand Total</th>
             <td>0</td>
             <td>0</td>
             <td>0</td>
@@ -67,9 +75,17 @@ const Complaint2 = () => {
       </Table>
 
       <div className="container mt-3">
-        <h5 className="text-center mb-4">Trend of Monthly disposal of complaints :</h5>
+        <h2 className="text-center mb-4">
+          Trend of Monthly Disposal of Complaints
+        </h2>
         <div className="px-lg-5">
-          <Table striped bordered hover responsive="sm">
+          <Table
+            striped
+            bordered
+            hover
+            responsive="sm"
+            aria-label="Monthly complaints trend table"
+          >
             <thead className="text-center">
               <tr>
                 <th>Sr No</th>
@@ -83,7 +99,7 @@ const Complaint2 = () => {
             <tbody className="text-center">
               <tr>
                 <td>1</td>
-                <td>february, 2026</td>
+                <td>February, 2026</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -101,7 +117,7 @@ const Complaint2 = () => {
                 <td>0</td>
               </tr>
 
-  <tr>
+              <tr>
                 <td>3</td>
                 <td>December, 2025</td>
 
@@ -111,20 +127,10 @@ const Complaint2 = () => {
                 <td>1</td>
                 <td>0</td>
               </tr>
-              {/* <tr>
-                <td>3</td>
-                <td>November, 2025</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr> */}
-
-
 
               <tr>
                 <td>4</td>
-                <td>Privious MOnthly Complaints  For this FY, 2025-26</td>
+                <td>Previous Monthly Complaints for this FY 2025-26</td>
                 <td>0</td>
                 <td>0</td>
                 <td>0</td>
@@ -134,7 +140,7 @@ const Complaint2 = () => {
 
               <tr>
                 <td></td>
-                <td>Grand Total</td>
+                <th scope="row">Grand Total</th>
                 <td>0</td>
                 <td>1</td>
                 <td>1</td>
@@ -146,9 +152,17 @@ const Complaint2 = () => {
       </div>
 
       <div className="container mt-3">
-        <h5 className="text-center mb-4">Trend of Annual disposal of complaints :</h5>
+        <h2 className="text-center mb-4">
+          Trend of Annual Disposal of Complaints
+        </h2>
         <div className="px-lg-5">
-          <Table striped bordered hover responsive="sm">
+          <Table
+            striped
+            bordered
+            hover
+            responsive="sm"
+            aria-label="Annual complaints trend table"
+          >
             <thead className="text-center">
               <tr>
                 <th>Sr No</th>
@@ -180,7 +194,7 @@ const Complaint2 = () => {
 
               <tr>
                 <td></td>
-                <td>Grand Total</td>
+                <th scope="row">Grand Total</th>
                 <td>0</td>
                 <td>5</td>
                 <td>5</td>

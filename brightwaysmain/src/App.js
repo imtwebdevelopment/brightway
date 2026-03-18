@@ -29,6 +29,12 @@ function App() {
     <>
       <div style={{ overflow: "clip" }}>
         <BrowserRouter>
+
+          {/* ✅ SKIP LINK ADDED */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+
           <Routes>
 
             <Route
@@ -36,7 +42,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Home />
+                  <div id="main-content">
+                    <Home />
+                  </div>
                   <Footer />
                 </>
               }
@@ -47,7 +55,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <About />
+                  <div id="main-content">
+                    <About />
+                  </div>
                   <Footer />
                 </>
               }
@@ -58,7 +68,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Service />
+                  <div id="main-content">
+                    <Service />
+                  </div>
                   <Footer />
                 </>
               }
@@ -69,7 +81,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Investor />
+                  <div id="main-content">
+                    <Investor />
+                  </div>
                   <Footer />
                 </>
               }
@@ -80,7 +94,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Complaint2 />
+                  <div id="main-content">
+                    <Complaint2 />
+                  </div>
                   <Footer />
                 </>
               }
@@ -93,7 +109,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <BasicStockCash />
+                  <div id="main-content">
+                    <BasicStockCash />
+                  </div>
                   <Footer />
                 </>
               }
@@ -104,7 +122,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <BasicIndexOption />
+                  <div id="main-content">
+                    <BasicIndexOption />
+                  </div>
                   <Footer />
                 </>
               }
@@ -115,7 +135,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <HniIndexOption />
+                  <div id="main-content">
+                    <HniIndexOption />
+                  </div>
                   <Footer />
                 </>
               }
@@ -126,7 +148,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <HniStockOption />
+                  <div id="main-content">
+                    <HniStockOption />
+                  </div>
                   <Footer />
                 </>
               }
@@ -137,7 +161,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <MomentumTrade />
+                  <div id="main-content">
+                    <MomentumTrade />
+                  </div>
                   <Footer />
                 </>
               }
@@ -148,7 +174,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <HNIStockFuturePro />
+                  <div id="main-content">
+                    <HNIStockFuturePro />
+                  </div>
                   <Footer />
                 </>
               }
@@ -159,7 +187,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <ProCommodity />
+                  <div id="main-content">
+                    <ProCommodity />
+                  </div>
                   <Footer />
                 </>
               }
@@ -170,7 +200,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <StockCashPro />
+                  <div id="main-content">
+                    <StockCashPro />
+                  </div>
                   <Footer />
                 </>
               }
@@ -181,7 +213,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Contact />
+                  <div id="main-content">
+                    <Contact />
+                  </div>
                   <Footer />
                 </>
               }
@@ -192,7 +226,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Policy />
+                  <div id="main-content">
+                    <Policy />
+                  </div>
                   <Footer />
                 </>
               }
@@ -203,7 +239,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <DisclosureDisclaimer />
+                  <div id="main-content">
+                    <DisclosureDisclaimer />
+                  </div>
                   <Footer />
                 </>
               }
@@ -214,7 +252,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <Kyc />
+                  <div id="main-content">
+                    <Kyc />
+                  </div>
                   <Footer />
                 </>
               }
@@ -226,7 +266,9 @@ function App() {
               element={
                 <>
                   <Header />
-                  <PaymentPage />
+                  <div id="main-content">
+                    <PaymentPage />
+                  </div>
                   <Footer />
                 </>
               }

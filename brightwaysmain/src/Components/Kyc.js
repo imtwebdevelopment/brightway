@@ -39,6 +39,7 @@ function Kyc() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
 
   const [formData, setFormData] = useState({
@@ -355,7 +356,7 @@ function Kyc() {
       !formData.mobile ||
       !formData.address
     ) {
-      alert("Please fill all required fields");
+      setFormError("Please fill all required fields");
       return;
     }
 
@@ -397,7 +398,7 @@ function Kyc() {
       const result = await sendKycToServer(pdfBytes);
 
       if (result.success) {
-
+        setFormError("");
         setFormData({
           fullName: "",
           gender: "",
@@ -453,10 +454,16 @@ function Kyc() {
 
         <div className="mt-5 mb-5">
           <form onSubmit={handleSubmit}>
+            {formError && (
+              <div role="alert" className="text-danger mb-3">
+                {formError}
+              </div>
+            )}
             <div className="row">
               <div className="col-md-4">
-                <label>Full Name *</label>
+                <label htmlFor="fullName">Full Name *</label>
                 <input
+                  id="fullName"
                   type="text"
                   className="form-control"
                   name="fullName"
@@ -467,8 +474,9 @@ function Kyc() {
               </div>
 
               <div className="col-md-4">
-                <label>Gender *</label>
+                <label htmlFor="gender">Gender *</label>
                 <Form.Select
+                  id="gender"
                   name="gender"
                   value={formData.gender}
                   onChange={handleInputChange}
@@ -482,8 +490,9 @@ function Kyc() {
               </div>
 
               <div className="col-md-4">
-                <label>Date of Birth *</label>
+                <label htmlFor="dob">Date of Birth *</label>
                 <input
+                  id="dob"
                   type="date"
                   className="form-control"
                   name="dob"
@@ -494,23 +503,24 @@ function Kyc() {
               </div>
 
               <div className="col-md-4">
-                <label>Mobile Number *</label>
+                <label htmlFor="mobile">Mobile Number *</label>
                 <input
+                  id="mobile"
                   type="tel"
                   className="form-control"
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
                   pattern="^[0-9]{10}$"
-                  title="Please enter 10 digit mobile number"
                   required
                 />
               </div>
 
               {/* EMAIL + OTP */}
               <div className="col-md-12 mt-3">
-                <label>Email Address *</label>
+                <label htmlFor="email">Email Address *</label>
                 <input
+                  id="email"
                   type="email"
                   className="form-control mb-2"
                   value={email}
@@ -528,9 +538,10 @@ function Kyc() {
                     {timer > 0 ? `Resend OTP (${timer}s)` : "Send OTP"}
                   </Button>
 
+                  <label htmlFor="otp">Enter OTP</label>
                   <input
+                    id="otp"
                     type="text"
-                    placeholder="Enter OTP"
                     className="form-control"
                     style={{ maxWidth: "200px" }}
                     value={otp}
@@ -548,15 +559,18 @@ function Kyc() {
                   </Button>
 
                   {isOtpVerified && (
-                    <span className="text-success mt-2">✓ Email Verified</span>
+                    <span role="status" aria-live="polite" className="text-success mt-2">
+                      ✓ Email Verified
+                    </span>
                   )}
                 </div>
               </div>
 
               {/* ADDRESS */}
               <div className="col-md-8 mt-3">
-                <label>Address *</label>
+                <label htmlFor="address">Address *</label>
                 <input
+                  id="address"
                   type="text"
                   className="form-control"
                   name="address"
@@ -568,8 +582,9 @@ function Kyc() {
 
               {/* PAN UPLOAD */}
               <div className="col-md-4 mt-3">
-                <label>PAN Card Upload</label>
+                <label htmlFor="panUpload">PAN Card Upload</label>
                 <input
+                  id="panUpload"
                   type="file"
                   className="form-control"
                   accept="image/*"
@@ -612,6 +627,8 @@ function Kyc() {
                 <h5>Client Consent Document</h5>
                 <div
                   onScroll={handlePdfScroll}
+                  tabIndex="0"
+                  aria-label="Consent document scroll area"
                   style={{
                     height: "400px",
                     overflowY: "scroll",
@@ -663,8 +680,8 @@ function Kyc() {
 
               {/* SIGNATURE PAD */}
               <div className="col-md-12 mt-4">
-                <label>Signature *</label>
-                <div
+                <label htmlFor="signature">Signature *</label>
+                <div id="signature"
                   style={{
                     background: "#fff",
                     border: "2px solid #000",
@@ -740,10 +757,10 @@ function Kyc() {
 
             <Button
               type="submit"
+              aria-busy={isSubmitting}
               variant="success"
               className="mt-4"
               disabled={!isOtpVerified || !isAgree || !isSigned || isSubmitting}
-              size="lg"
             >
               {isSubmitting ? "Submitting KYC..." : "Submit KYC"}
             </Button>

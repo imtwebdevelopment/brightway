@@ -13,9 +13,6 @@ h5 {
   color: black !important;
   font-size: 20px !important;
   font-family: 'Poppins', sans-serif;
-  /* font-family: 'Merriweather', serif;
-font-family: 'Oswald', sans-serif;
-font-family: 'Roboto', sans-serif; */
 }
 
 
@@ -559,4 +556,19 @@ input[type="text"] {
   font-size: 16px;
   padding: 6px;
   text-align: justify;
+}
+
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 10px;
 }
